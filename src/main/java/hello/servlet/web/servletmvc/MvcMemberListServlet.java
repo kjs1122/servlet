@@ -1,5 +1,8 @@
 package hello.servlet.web.servletmvc;
 
+import hello.servlet.domain.member.Member;
+import hello.servlet.domain.member.MemberRepository;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -7,15 +10,22 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
-@WebServlet(name = "mvcMemberFormServlet", urlPatterns = "/servlet-mvc/members/new-form")
-public class MvcMemberFormServlet extends HttpServlet {
+@WebServlet(name = "mvcMemberListServlet", urlPatterns = "/servlet-mvc/members")
+public class MvcMemberListServlet extends HttpServlet {
+
+    private final MemberRepository memberRepository = MemberRepository.getInstance();
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        String viewPath = "/WEB-INF/views/new-form.jsp";
+
+        List<Member> members = memberRepository.findAll();
+
+        req.setAttribute("members" ,members);
+
+        String viewPath = "/WEB-INF/views/members.jsp";
         RequestDispatcher dispatcher = req.getRequestDispatcher(viewPath);
         dispatcher.forward(req, res);
-        System.out.println("뭐가문제야 도대체");
     }
 }
